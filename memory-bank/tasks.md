@@ -76,20 +76,154 @@ Initialize Memory Bank system for FinRL project to enable structured task manage
 
 ## Task Queue
 
-*Ready to receive first development task*
-
-**Instructions for User**:
-Please describe the specific task, feature, or issue you'd like to work on. The system will automatically assess complexity and guide you through the appropriate workflow.
-
-Below is an **updated, folder-accurate TDD roadmap** that matches the **current directory layout of the upstream
-FinRL repository** (commit HEAD on the `main` branch, May 2025).
-All file-paths have been reconciled with the structure shown in the README tree snippet and with the
-issues/notebooks that reference them.([GitHub][1], [GitHub][2], [GitHub][3])
-Where a name differs from the original Polish plan I mark it **bold-blue**.
+1. **DEV-001**: CryptoFutures Environment Implementation (Level 3) - 🔄 IN PROGRESS
+   - Implement cryptocurrency futures trading environment
+   - Add support for funding rates, slippage, and proper risk management
+   - Integrate with RLlib for training
 
 ---
 
-## Current top-level tree (shortened)
+## Completed Task History
+
+1. **INIT-001**: Memory Bank Initialization (Level 1) - ✅ COMPLETED
+   - Initialized Memory Bank system for FinRL project
+   - Created all required files and structure
+   - Documented project context and technical foundation
+
+---
+
+## Previous Sections (Archived)
+
+## Current Task: CryptoFutures Environment Implementation
+
+**Task ID**: DEV-001  
+**Type**: Feature Development  
+**Status**: 🔄 IN PROGRESS  
+**Complexity Level**: Level 3 (Intermediate Feature)
+
+### Task Description
+
+Implement a cryptocurrency futures trading environment by extending the existing `CryptoEnv` class from FinRL. This environment will support futures trading mechanics including funding rates, leverage, slippage, and proper risk management.
+
+### Progress Checklist
+
+- [ ] Environment Setup and Base Class Extension
+  - [ ] Copy the existing `CryptoEnv` class from `finrl/meta/env_cryptocurrency_trading/crypto_env.py`
+  - [ ] Create a subclass `CryptoFuturesEnv` that extends `CryptoEnv` in the same file
+  - [ ] Add futures-specific parameters to the constructor
+  - [ ] Register the environment with Gym
+- [ ] Funding Rate Integration
+  - [ ] Implement Binance API downloader for historical funding rates
+  - [ ] Add funding rate storage in the environment state
+  - [ ] Incorporate funding rates into the reward calculation
+- [ ] Slippage and Trading Mechanics
+  - [ ] Implement realistic slippage model based on order size
+  - [ ] Modify step() method to account for slippage in price execution
+  - [ ] Add leverage parameter and margin requirements
+  - [ ] Implement liquidation checks during position management
+- [ ] Observation and Action Space
+  - [ ] Extend observation space to include funding rate information
+  - [ ] Implement position size normalization for observations
+  - [ ] Create action masking to prevent invalid trades
+  - [ ] Add utility methods for observation transformation
+- [ ] RLlib Integration
+  - [ ] Create Gym registration for the new environment
+  - [ ] Implement RLlib configuration for SAC with the new environment
+  - [ ] Add transformer network option for attention-based policy
+- [ ] Testing and Validation
+  - [ ] Implement unit tests for environment initialization
+  - [ ] Create tests for step() functionality with funding rates
+  - [ ] Test slippage calculations under various conditions
+  - [ ] Validate RLlib integration and training
+
+### Components List
+
+1. **Base Environment** 🔄 IN PROGRESS
+   - Extending `CryptoEnv` class to support futures trading
+   - Adding futures-specific parameters and state variables
+
+2. **Funding Rate System** 📋 PLANNED
+   - API integration for historical funding rates
+   - Funding rate application to positions
+
+3. **Slippage Model** 📋 PLANNED
+   - Realistic slippage implementation
+   - Order size-dependent execution
+
+4. **Risk Management** 📋 PLANNED
+   - Leverage handling
+   - Margin requirements
+   - Liquidation checks
+
+5. **RLlib Integration** 📋 PLANNED
+   - Environment registration
+   - SAC configuration
+   - Transformer network support
+
+### Implementation Strategy
+
+The implementation will follow these phases:
+
+1. **Base Environment Setup**: First, we'll extend the existing environment, focusing on maintaining compatibility with the original API.
+
+2. **Futures Mechanics**: We'll then add the specific mechanics of futures trading (funding rates, leverage, liquidation).
+
+3. **Integration & Testing**: Finally, we'll ensure proper integration with RLlib and thorough testing.
+
+### Dependencies and Integration Points
+
+- The environment depends on `finrl.meta.env_cryptocurrency_trading.crypto_env.py`
+- Integration with RLlib through the agent wrappers in `finrl.agents.rllib`
+- Potential need for data processors from `finrl.meta.data_processors`
+
+### Potential Challenges and Mitigations
+
+1. **Challenge**: Correctly modeling funding rate impact on positions
+   **Mitigation**: Start with simplified model, then refine based on backtesting
+
+2. **Challenge**: Ensuring realistic slippage without oversimplification
+   **Mitigation**: Implement multiple slippage models for comparison
+
+3. **Challenge**: Maintaining proper Gym API compatibility
+   **Mitigation**: Thoroughly test with latest Gym versions and RLlib
+
+### Success Criteria
+
+- [ ] Environment successfully handles futures trading mechanics including funding rates
+- [ ] Slippage model realistically affects trade execution
+- [ ] Risk management properly enforces margin requirements and liquidation
+- [ ] Environment is compatible with RLlib and can be used for training
+- [ ] All unit tests pass and validate functionality
+
+### Components Requiring Creative Phase
+
+The following components would benefit from a creative design phase:
+
+1. **Slippage Model Design**: Determining the most appropriate slippage model that balances realism with computational efficiency
+2. **Funding Rate Implementation**: Designing how funding rates affect position values and rewards
+3. **Observation Space Design**: Creating an efficient representation of futures-specific data
+
+---
+
+## Task Queue
+
+1. **DEV-001**: CryptoFutures Environment Implementation (Level 3) - 🔄 IN PROGRESS
+   - Implement cryptocurrency futures trading environment
+   - Add support for funding rates, slippage, and proper risk management
+   - Integrate with RLlib for training
+
+---
+
+## Completed Task History
+
+1. **INIT-001**: Memory Bank Initialization (Level 1) - ✅ COMPLETED
+   - Initialized Memory Bank system for FinRL project
+   - Created all required files and structure
+   - Documented project context and technical foundation
+
+---
+
+## Previous Sections (Archived)
 
 ```
 finrl/
@@ -119,7 +253,7 @@ The multicrypto environment you is now in
 | **Base Gym env**                     | `CryptoEnv` class in `env_cryptocurrency_trading/crypto_env.py` | Already handles multi-asset observation & action masking      |
 | **Feature engineering**              | `finrl.meta.data_processors`                                    | Keeps candle → dataframe conversion consistent with tutorials |
 | **Stable-Baselines3/RLlib wrappers** | `finrl.agents.rllib`                                            | Our SAC config plugs in here unchanged                        |
-| **SAC default nets**                 | `finrl.drl_library.models`                                      | We’ll only swap the MLP for `use_attention=True`              |
+| **SAC default nets**                 | `finrl.drl_library.models`                                      | We'll only swap the MLP for `use_attention=True`              |
 
 ---
 
@@ -183,7 +317,7 @@ The same import is used widely in FinRL-Tutorials notebooks.([GitHub][4])
 ---
 
 **You can now hand this patched plan to Cursor AI**; all copy/extend steps line up with the current upstream code
-exactly, so no “file not found” surprises should occur.
+exactly, so no "file not found" surprises should occur.
 
 [1]: https://github.com/AI4Finance-Foundation/FinRL?utm_source=chatgpt.com "FinRL®: Financial Reinforcement Learning. - GitHub"
 [2]: https://github.com/AI4Finance-Foundation/FinRL-Meta?utm_source=chatgpt.com "FinRL®-Meta: Dynamic datasets and market environments for FinRL."
